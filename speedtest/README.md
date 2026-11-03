@@ -1,14 +1,14 @@
-# Internet Speed Test CLI (Braille Speedometer, Ping, Jitter, DL & UL)
+# Proprietary Speed Test Interface & Server
 
-High-performance, zero-dependency Internet Speed Test utility for the terminal. Features a 60 FPS sub-pixel Braille dot-matrix speedometer dial, physics-damped needle kinematics, real-time download and upload telemetry, and structured outputs for scripting and benchmarking.
+A high-performance, zero-dependency network speed testing interface built to deliver consistent, reproducible, wire-speed network benchmarks **without relying on third-party speedtest APIs** (such as Ookla, Fast.com, or third-party scraping).
 
 ```
   ╔════════════════════════════════════════════════════════════════╗
-  ║                INTERNET SPEED TEST TERMINAL                   ║
+  ║                PROPRIETARY SPEED TEST ENGINE                   ║
   ╚════════════════════════════════════════════════════════════════╝
 
-  Client: Jio (152.57.237.104)
-  Server: ACT FIBERNET - Vijayawada [India]
+  Client:   Reliance Jio Infocomm Limited (2409:40f0:7449:...) [Guntur]
+  Server:   [DIRECT BACKBONE] Nagpur Anycast Node (NAG)
   ────────────────────────────────────────────────────────────────
                     ⢀⣠⣤⣶⣶⣶⣶⣤⣄⡀
                 ⢀⣴⡿⠋⠁          ⠈⠙⢿⣦⡀
@@ -18,175 +18,145 @@ High-performance, zero-dependency Internet Speed Test utility for the terminal. 
             ⣿⡇                           ⢸⣿
             ⣿⡇              ⢠             ⢸⣿
             ⠹⣷⣄          ⣠⡿⠁          ⣠⣾⠏
-  Speed:   116.9 Mbps   (Scale: 0-250 Mbps)
-  Status: ▼ [DOWNLOAD] Testing Download Speed...
+  Speed:    86.4 Mbps   (Scale: 0-100 Mbps)
+  Status: ▼ [DOWNLOAD] Testing Download Speed (Multi-Stream)...
 
-  ████████████████████████████████████████████▍░░░░░░░░  82%
+  ████████████████████████████████████████████▍░░░░░░░░  86%
   ▃▅▆▇▇▆▅▆▇██▇▆▅▄▃▂▂▃▄▅▆▇████▇▆▅▄▃▂▃▄▅▆▇██ Live
   ────────────────────────────────────────────────────────────────
-  Ping: 180.7 ms  Jitter: 55.1 ms  DL: 116.9 Mbps (28.4 MB)
-  UL: 0.7 Mbps (0.4 MB)
+  Ping: 34.2 ms   Jitter: 4.8 ms   DL: 86.4 Mbps (31.2 MB)
+  UL: 2.8 Mbps (1.1 MB)
   ╚════════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
-## Key Features
+## Why Proprietary Testing?
 
-- **Braille Dot-Matrix Speedometer Dial**: 72x32 sub-pixel canvas rendering a 250° circular arc gauge with radial ticks and a rotating needle.
-- **Physics-Damped Spring Needle**: Critically damped second-order spring dynamics simulate real physical meter inertia without visual stutter or abrupt jumps.
-- **Dynamic Auto-Scaling**: The dial scale dynamically expands (25 → 50 → 100 → 250 → 500 → 1000 Mbps) based on connection throughput.
-- **Multi-Stream Parallel Engine**: Multi-threaded parallel HTTP GET (download) and chunked HTTP POST (upload) streams saturate available bandwidth.
-- **Low-Latency Latency & Jitter**: Computes minimum, average, maximum RTT, and RFC 3550 / Ookla jitter across multiple ping samples.
-- **Sub-Block Fractional Gauge**: 46-column progress bar with 1/8th-step Unicode fractional precision (`▏▎▍▌▋▊▉█`).
-- **Real-Time Scrolling Sparkline**: Scrolling waveform graph visualizes speed stability and bufferbloat in real time.
-- **Zero External Dependencies**: Pure Python 3 standard library (`urllib`, `socket`, `threading`, `json`, `math`). Runs anywhere with Python 3 installed.
-- **Universal Cross-Platform**: Optimized for Android Termux, Linux, macOS, and Windows terminals.
-- **Scripting & CI/CD Ready**: Supports `--json` for machine parsing and `--simple` for lightweight non-interactive logging.
+Third-party speedtest APIs (such as Speedtest.net / Ookla scraping) suffer from major inconsistencies:
+- **Volunteer Host Congestion**: Many 3rd-party servers are run by volunteer ISPs on non-standard ports (like `:8080`) that throttle, drop packets, or run behind self-signed SSL certificates.
+- **Erratic Selection**: Flawed candidate pinging frequently routes tests through distant or overloaded servers, yielding wildly fluctuating numbers (e.g. 116 Mbps on one run, 29 Mbps on the next).
+- **Aggressive Throttling & 403 Blocks**: Third-party APIs aggressively block automated requests, causing tests to fail with HTTP 403 Forbidden errors.
+
+**The Solution:**
+This proprietary interface provides two zero-dependency, wire-speed testing modes:
+1. **Direct-Pipe Internet Mode (Default)**: Uses direct, neutral high-capacity backbone pipes without calling any third-party speedtest APIs. Delivers reproducible, low-jitter, enterprise-grade benchmarks.
+2. **Dedicated Proprietary Server Mode (`--server` / `--serve`)**: Run a local or remote speed test daemon capable of testing full line rate (1 Gbps - 10 Gbps+) across local Wi-Fi, Ethernet LAN, 5G hotspots, VPNs, or private cloud links. Includes a built-in modern HTML5 Web GUI.
 
 ---
 
-## Usage
+## Key Features
 
-### 1. Interactive Animated Mode (Default)
-Run with the live 60 FPS Braille speedometer dial:
+- **Zero 3rd-Party API Dependencies**: Completely autonomous network benchmarking with zero external API calls.
+- **10Gbps+ Wire-Speed Capable**: Pre-allocated synthetic streaming buffers with zero disk I/O and zero-copy chunk delivery.
+- **60 FPS Braille Speedometer Dial**: 72×32 sub-pixel canvas rendering a 250° circular arc with critically damped second-order spring physics.
+- **Dynamic Auto-Scaling**: Speedometer smoothly upscales (25 → 50 → 100 → 250 → 500 → 1000 → 2500+ Mbps) to handle fast connections.
+- **LAN Zero-Config Auto-Discovery (`--discover`)**: UDP broadcast discovery automatically detects proprietary servers running on the local network.
+- **Built-in HTML5 Web Interface**: Serving `http://<ip>:8080/` gives any browser (phone, tablet, PC) a canvas-based speed test dashboard.
+- **Low-Latency RTT & RFC 3550 Jitter**: Sub-millisecond round-trip time and jitter telemetry.
+- **Universal Cross-Platform**: Pure Python 3 standard library (`urllib`, `socket`, `threading`, `http.server`). Runs on Android (Termux), Linux, macOS, and Windows.
+
+---
+
+## Usage Guide
+
+### 1. Direct Internet Speed Test (Default)
+Tests your connection against high-capacity direct backbone streams:
 
 **On Windows (PowerShell or CMD):**
 ```powershell
 cd speedtest
 
-# Using PowerShell launcher
+# Interactive 60 FPS Braille speedometer dial
 .\speedtest.ps1
 
-# Or using Windows Batch / Command Prompt
-.\speedtest.cmd
+# Simple plain-text mode (for scripts or logs)
+.\speedtest.ps1 -s
+
+# Structured JSON telemetry
+.\speedtest.ps1 -j
+
+# Speeds in MegaBytes/sec (MB/s)
+.\speedtest.ps1 --bytes
 ```
 
 **On Linux, macOS, or Android (Termux):**
 ```bash
 cd speedtest
 
-# Using POSIX launcher
+# Interactive live test
 ./speedtest.sh
 
-# Or directly with Python 3
-python3 speedtest.py
-```
-
-### 2. Custom Duration and Parallel Threads
-```bash
-# Run 10-second download and upload with 6 worker threads
-./speedtest.sh -d 10 -t 6
-```
-
-### 3. Display in MegaBytes per Second (MB/s)
-```bash
-./speedtest.sh --bytes
-```
-
-### 4. Simple Plain-Text Mode
-Clean, unformatted text output ideal for headless servers, ssh sessions, or cron logs:
-```bash
+# Simple mode
 ./speedtest.sh -s
-```
-Output:
-```text
-Initializing Speed Test...
-Client: Gtpl Kcbpl Broadband Pvt (103.171.247.142)
-Server: ACT FIBERNET (Vijayawada)
-Measuring ping and jitter...
-Latency: 180.72 ms (Jitter: 55.09 ms)
-Testing download speed...
-Download: 116.93 Mbps
-Testing upload speed...
-Upload: 0.69 Mbps
-Grade: [D] Low Bandwidth / High Latency (Experiencing bottlenecks)
-```
 
-### 5. Structured JSON Output
-Full structured benchmark results for automated pipelines and monitoring:
-```bash
+# JSON output
 ./speedtest.sh -j
-```
-Sample JSON:
-```json
-{
-  "timestamp": "2026-11-03T03:33:58.502022+00:00",
-  "client": {
-    "ip": "103.171.247.142",
-    "isp": "Gtpl Kcbpl Broadband Pvt",
-    "city": "",
-    "country": "IN",
-    "lat": 22.518,
-    "lon": 88.3832
-  },
-  "server": {
-    "id": "25285",
-    "sponsor": "DVPL",
-    "name": "Guntur",
-    "country": "India",
-    "distance_km": 14,
-    "host": "speedgnt.dvpl.in.prod.hosts.ooklaserver.net:8080"
-  },
-  "ping": {
-    "avg_ms": 174.15,
-    "min_ms": 104.5,
-    "max_ms": 290.12,
-    "jitter_ms": 40.77,
-    "samples": [290.12, 250.95, 136.77, 104.5, 140.56, 128.07, 162.94, 179.29]
-  },
-  "download": {
-    "mbps": 90.41,
-    "mb_per_sec": 11.3,
-    "bytes": 22972979
-  },
-  "upload": {
-    "mbps": 1.23,
-    "mb_per_sec": 0.15,
-    "bytes": 393270
-  },
-  "quality": {
-    "grade": "D",
-    "description": "Low Bandwidth / High Latency (Experiencing bottlenecks)"
-  }
-}
-```
-
-### 6. List Closest Servers & Select Specific Server
-```bash
-# List nearest servers
-./speedtest.sh --list-servers
-
-# Test against a specific server ID
-./speedtest.sh --server 25285
-```
-
-### 7. Download-Only or Upload-Only Test
-```bash
-# Skip upload test
-./speedtest.sh --no-upload
-
-# Skip download test
-./speedtest.sh --no-download
 ```
 
 ---
 
-## Command-Line Arguments Reference
+### 2. Proprietary Server Mode (LAN, Wi-Fi & Private Cloud)
 
-| Option | Shorthand | Default | Description |
+#### Step A: Start the Server
+Launch the proprietary speed test daemon on any host (PC, Raspberry Pi, home server, Android phone in Termux, or cloud instance):
+
+**On Windows:**
+```powershell
+.\server.ps1 --port 8080
+# Or using CMD:
+server.cmd --port 8080
+```
+
+**On Linux / macOS / Termux:**
+```bash
+./server.sh --port 8080
+```
+
+This starts:
+- HTTP API on `http://0.0.0.0:8080/`
+- Web GUI on `http://<your-ip>:8080/` (open in your phone or PC browser!)
+- UDP LAN Discovery responder on port 8081
+
+#### Step B: Run the Client Against Your Server
+From any other machine or phone on the same network:
+
+```bash
+# Connect directly by IP and port:
+./speedtest.sh --server 192.168.1.50:8080
+
+# Or auto-discover servers on your Wi-Fi/LAN:
+./speedtest.sh --discover
+```
+
+---
+
+### 3. Browser-Based Web GUI
+When the server is running, open `http://<server-ip>:8080/` in any browser:
+- Canvas-rendered animated speedometer dial
+- Live real-time latency and jitter measurement
+- Multi-stream parallel download and upload tests
+- Zero client installation needed on phones or guest devices
+
+---
+
+## CLI Options Reference
+
+| Flag | Shorthand | Default | Description |
 |---|---|---|---|
-| `--simple` | `-s` | `false` | Plain text output without ANSI animations |
-| `--json` | `-j` | `false` | JSON formatted telemetry |
+| `--server <ip:port>` | `-H` | `None` | Connect to proprietary server (e.g. `192.168.1.100:8080`) |
+| `--discover` | | `false` | Auto-discover proprietary servers on the local LAN/Wi-Fi |
+| `--serve` | `-S` | `false` | Start the proprietary server directly from the speedtest CLI |
+| `--port <p>` | | `8080` | Port for the speed test server |
+| `--simple` | `-s` | `false` | Plain-text output without ANSI animations |
+| `--json` | `-j` | `false` | Machine-readable JSON telemetry |
 | `--bytes` | | `false` | Display speeds in MB/s instead of Mbps |
-| `--duration` | `-d` | `8` | Duration in seconds per test phase |
-| `--threads` | `-t` | `4` | Number of parallel worker threads |
-| `--server <id>` | | `None` | Force test to a specific server ID |
-| `--list-servers` | | `false` | List 15 closest servers and exit |
+| `--duration <sec>` | `-d` | `8` | Duration in seconds per test phase |
+| `--threads <n>` | `-t` | `4` | Number of parallel worker streams |
 | `--no-download` | | `false` | Skip download speed phase |
 | `--no-upload` | | `false` | Skip upload speed phase |
 | `--fps <n>` | `-f` | `60` | Target frame rate for the interactive display |
-| `--no-color` | | `false` | Disable 24-bit ANSI color rendering |
+| `--no-color` | | `false` | Disable ANSI color rendering |
 
 ---
 
