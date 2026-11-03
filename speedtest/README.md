@@ -50,8 +50,23 @@ High-performance, zero-dependency Internet Speed Test utility for the terminal. 
 
 ### 1. Interactive Animated Mode (Default)
 Run with the live 60 FPS Braille speedometer dial:
+
+**On Windows (PowerShell or CMD):**
+```powershell
+cd speedtest
+
+# Using PowerShell launcher
+.\speedtest.ps1
+
+# Or using Windows Batch / Command Prompt
+.\speedtest.cmd
+```
+
+**On Linux, macOS, or Android (Termux):**
 ```bash
-# Using launcher script
+cd speedtest
+
+# Using POSIX launcher
 ./speedtest.sh
 
 # Or directly with Python 3
